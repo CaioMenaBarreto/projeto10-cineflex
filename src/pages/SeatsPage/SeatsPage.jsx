@@ -98,6 +98,7 @@ export default function SeatsPage(props) {
                             isAvailable={seat.isAvailable}
                             isSelected={selectedSeats.includes(seat.id)}
                             onClick={() => handleSeatClick(seat.id, seat.isAvailable, seat.name)}
+                            data-test="seat"
                         >
                             {seat.name}
                         </SeatItem>
@@ -121,15 +122,15 @@ export default function SeatsPage(props) {
 
             <FormContainer onSubmit={enviarpedido}>
                 <label htmlFor="nome">Nome do Comprador:</label>
-                <input type="text" required id="nome" value={nome} onChange={e => SetNome(e.target.value)} placeholder="Digite seu nome..." />
+                <input data-test="client-name" type="text" required id="nome" value={nome} onChange={e => SetNome(e.target.value)} placeholder="Digite seu nome..." />
 
                 <label htmlFor="cpf">CPF do Comprador:</label>
-                <input type="number" required id="cpf" value={cpf} onChange={e => SetCpf(e.target.value)} placeholder="Digite seu CPF..." />
+                <input data-test="client-cpf" type="number" required id="cpf" value={cpf} onChange={e => SetCpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-                <button type="submit">Reservar Assento(s)</button>
+                <button data-test="book-seat-btn" type="submit">Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
+            <FooterContainer data-test="footer">
                 <div>
                     <img src={seats.movie && seats.movie.posterURL} alt="poster" />
                 </div>
