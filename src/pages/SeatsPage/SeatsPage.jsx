@@ -2,24 +2,34 @@ import styled, { css } from "styled-components";
 import axios from "axios";
 import { useState } from "react"
 import { useEffect } from "react";
-import { useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 
-export default function SeatsPage() {
+export default function SeatsPage(props) {
+
+    const {SetSucess} = props;
 
     const [seats, SetSeats] = useState([]);
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [nome, SetNome] = useState("");
+    const [cpf, SetCpf] = useState("");
+    const [nomeAssento, SetNomeAssento] = useState([]);
     const parametros = useParams();
-    // console.log(parametros.idSessao);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const url = (`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${parametros.idSessao}/seats`);
         const promise = axios.get(url);
         promise.then(resposta => SetSeats(resposta.data));
         promise.catch(error => console.log(error.response.data));
-    }, [])
+    }, []);
 
-    const handleSeatClick = (seatId) => {
+    const handleSeatClick = (seatId, isAvailable, seatName) => {
+        if (!isAvailable) {
+            alert('Esse assento não está disponível');
+            return;
+        }
+
         setSelectedSeats((prevSelectedSeats) => {
             if (prevSelectedSeats.includes(seatId)) {
                 const updatedSeats = prevSelectedSeats.filter((id) => id !== seatId);
@@ -31,26 +41,67 @@ export default function SeatsPage() {
                 return updatedSeats;
             }
         });
+
+        SetNomeAssento((prevSelectedSeats) => {
+            if (prevSelectedSeats.includes(seatName)) {
+                const updatedSeats = prevSelectedSeats.filter((name) => name !== seatName);
+                console.log("Nome dos assentos selecionados:", updatedSeats);
+                return updatedSeats;
+            } else {
+                const updatedSeats = [...prevSelectedSeats, seatName];
+                console.log("Nome dos assentos selecionados:", updatedSeats);
+                return updatedSeats;
+            }
+        });
     };
+    function enviarpedido(e) {
+        e.preventDefault();
 
+        const url = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many";
 
+        const data = {
+            ids: selectedSeats,
+            name: nome,
+            cpf: cpf,
+        };
 
+        const info={
+            nomes: nomeAssento,
+            name: nome,
+            cpf: cpf,
+            nomeDoFilme: seats.movie.title,
+            horario:  seats.name,
+            data: seats.day.date
+        }
+
+        console.log(data);
+        axios.post(url, data)
+            .then((response) => {
+                console.log("Reserva realizada com sucesso:", response.data);
+                SetSucess({...info});
+                navigate(`/sucesso`);
+            })
+            .catch((error) => {
+                console.log("Erro ao fazer reserva:", error);
+            });
+    }
 
     return (
         <PageContainer>
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                {seats.seats && seats.seats.map((seat) => (
-                    <SeatItem
-                        key={seat.id}
-                        isAvailable={seat.isAvailable}
-                        isSelected={selectedSeats.includes(seat.id)}
-                        onClick={() => handleSeatClick(seat.id)}
-                    >
-                        {seat.name}
-                    </SeatItem>
-                ))}
+                {seats.seats &&
+                    seats.seats.map((seat) => (
+                        <SeatItem
+                            key={seat.id}
+                            isAvailable={seat.isAvailable}
+                            isSelected={selectedSeats.includes(seat.id)}
+                            onClick={() => handleSeatClick(seat.id, seat.isAvailable, seat.name)}
+                        >
+                            {seat.name}
+                        </SeatItem>
+                    ))}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -68,14 +119,14 @@ export default function SeatsPage() {
                 </CaptionItem>
             </CaptionContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+            <FormContainer onSubmit={enviarpedido}>
+                <label htmlFor="nome">Nome do Comprador:</label>
+                <input type="text" required id="nome" value={nome} onChange={e => SetNome(e.target.value)} placeholder="Digite seu nome..." />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <label htmlFor="cpf">CPF do Comprador:</label>
+                <input type="number" required id="cpf" value={cpf} onChange={e => SetCpf(e.target.value)} placeholder="Digite seu CPF..." />
 
-                <button>Reservar Assento(s)</button>
+                <button type="submit">Reservar Assento(s)</button>
             </FormContainer>
 
             <FooterContainer>
@@ -113,8 +164,8 @@ const SeatsContainer = styled.div`
     justify-content: center;
     margin-top: 20px;
 `
-const FormContainer = styled.div`
-    width: calc(100vw - 40px); 
+const FormContainer = styled.form`
+    width: 98%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -122,9 +173,51 @@ const FormContainer = styled.div`
     font-size: 18px;
     button {
         align-self: center;
+        width: 225px;
+        height: 42px;
+        left: 72px;
+        top: 688px;
+        background: #E8833A;
+        border-radius: 3px;
+        border: none;
+        margin-bottom: 30px;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.04em;
+        color: #FFFFFF;
+
     }
     input {
-        width: calc(100vw - 60px);
+        width: 90%;
+        height: 51px;
+        left: 24px;
+        top: 497px;
+        background: #FFFFFF;
+        border: 1px solid #D5D5D5;
+        border-radius: 3px;
+        margin-left: 16px;
+        margin-bottom: 30px;
+        font-family: 'Roboto';
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 21px;
+        display: flex;
+        align-items: center;
+    }
+    label{
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 21px;
+        display: flex;
+        align-items: center;
+        color: #293845;
+        margin-left: 16px;
     }
 `
 const CaptionContainer = styled.div`

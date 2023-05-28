@@ -5,8 +5,11 @@ import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
 import axios from 'axios';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { useState } from "react"
 
 export default function App() {
+
+  const [sucess, SetSucess] = useState({});
 
   axios.defaults.headers.common['Authorization'] = 'ODimYDLjBozSP3abuqQmYL2h';
 
@@ -16,8 +19,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />}/>
         <Route path="/sessoes/:idFilme" element={<SessionsPage />}/>
-        <Route path="/assentos/:idSessao" element={<SeatsPage />}/>
-        <Route path="/sucesso" element={<SuccessPage />}/>
+        <Route path="/assentos/:idSessao" element={<SeatsPage SetSucess={SetSucess}/>}/>
+        <Route path="/sucesso" element={<SuccessPage sucess={sucess}/>}/>
       </Routes>
     </BrowserRouter>
   )

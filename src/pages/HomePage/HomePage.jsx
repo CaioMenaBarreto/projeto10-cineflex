@@ -51,11 +51,18 @@ const PageContainer = styled.div`
     padding-top: 70px;
 `
 const ListContainer = styled.div`
-    width: 330px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    padding: 10px;
+    justify-content: center;
+    @media (width: 768px){
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+    }
 `
 const MovieContainer = styled.div`
     width: 145px;

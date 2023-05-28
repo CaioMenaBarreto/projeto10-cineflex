@@ -7,7 +7,7 @@ export default function SessionsPage() {
 
     const [secoes, SetSecoes] = useState([]);
     const parametros = useParams();
-    console.log(parametros.idFilme);
+    //console.log(parametros.idFilme);
 
     useEffect(() => {
         const url = (`https://mock-api.driven.com.br/api/v8/cineflex/movies/${parametros.idFilme}/showtimes`);
@@ -26,7 +26,7 @@ export default function SessionsPage() {
                         <ButtonsContainer>
                             {secao.showtimes.map((showtime) => (
                                 <Link to={`/assentos/${showtime.id}`}>
-                                <button key={showtime.id}>{showtime.name}</button>
+                                    <button key={showtime.id}>{showtime.name}</button>
                                 </Link>
                             ))}
                         </ButtonsContainer>
@@ -77,6 +77,14 @@ const ButtonsContainer = styled.div`
     margin: 20px 0;
     button {
         margin-right: 20px;
+        width: 83px;
+        height: 43px;
+        left: 114px;
+        top: 227px;
+        background-color: #E8833A;
+        color: #FFFFFF;
+        border-radius: 3px;
+        border: none;
     }
     a {
         text-decoration: none;
@@ -114,6 +122,7 @@ const FooterContainer = styled.div`
         align-items: flex-start;
         p {
             text-align: left;
+            overflow-y: hidden;
             &:nth-child(2) {
                 margin-top: 10px;
             }

@@ -1,6 +1,10 @@
 import styled from "styled-components"
+import { Link, useParams } from "react-router-dom"
 
-export default function SuccessPage() {
+export default function SuccessPage(props) {
+
+    const {sucess} = props;
+    console.log(sucess);
 
     return (
         <PageContainer>
@@ -8,24 +12,24 @@ export default function SuccessPage() {
 
             <TextContainer>
                 <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
-                <p>03/03/2023 - 14:00</p>
+                <p>{sucess.nomeDoFilme}</p>
+                <p>{sucess.data} - {sucess.horario}</p>
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Ingressos</p></strong>
-                <p>Assento 01</p>
-                <p>Assento 02</p>
-                <p>Assento 03</p>
+                {sucess.nomes && sucess.nomes.map((nome)=>(
+                    <p>Assento {nome}</p>
+                ))}
             </TextContainer>
 
             <TextContainer>
                 <strong><p>Comprador</p></strong>
-                <p>Nome: Letícia Chijo</p>
-                <p>CPF: 123.456.789-10</p>
+                <p>Nome: {sucess.name}</p>
+                <p>CPF: {sucess.cpf}</p>
             </TextContainer>
 
-            <button>Voltar para Home</button>
+            <Link to={`/`}><button>Voltar para Home</button></Link>
         </PageContainer>
     )
 }
@@ -45,9 +49,26 @@ const PageContainer = styled.div`
     }
     button {
         margin-top: 50px;
+        width: 225px;
+        height: 42px;
+        left: 74px;
+        top: 622px;
+        background: #E8833A;
+        border-radius: 3px;
+        border: none;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        letter-spacing: 0.04em;
+        color: #FFFFFF;
     }
     h1 {
-        font-family: 'Roboto';
+        font-family: 'Roboto', sans-serif;
         font-style: normal;
         font-weight: 700;
         font-size: 24px;
@@ -64,6 +85,7 @@ const TextContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     margin-top: 30px;
+    line-height: 26px;
     strong {
         font-weight: bold;
         margin-bottom: 10px;
