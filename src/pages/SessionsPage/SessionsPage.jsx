@@ -40,7 +40,7 @@ export default function SessionsPage() {
                     <img src={secoes.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>{secoes.overview}</p>
+                    <p>{secoes.title}</p>
                 </div>
             </FooterContainer>
 
